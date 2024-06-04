@@ -18,13 +18,18 @@ int main() {
   int connection_status = connect(network_socket, (struct sockaddr *) &server_address, sizeof(server_address));
   if(connection_status == -1) {
     printf("There was an error making a connection to the remote socket\n\n");
+    return 0;
   }
 
   // RECEBE DADOS DO SERVIDOR
   char server_response[256];
+  
   recv(network_socket, &server_response, sizeof(server_response), 0);
+  //(network_socket, &server_response, sizeof(server_response));
   
   printf("The server sent the data: %s\n", server_response);
+  
+  send(network_socket, "Hello from the client!\n", sizeof("Hello from the client!\n"),0);
 
   // FECHA O SOCKET
   close(network_socket);
