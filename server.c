@@ -1,54 +1,79 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
 
-int server_socket;
-int client_socket;
+#define MAX 256
+#define PORT 9002
+#define ADDRESS INADDR_ANY
+#define SA struct sockaddr
 
-struct sockaddr_in server_address;
-struct sockaddr_in client_address;
-
-void init_server(){
-  // CRIA UM SOCKET
-  server_socket = socket(AF_INET, SOCK_STREAM, 0);
-
-  server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(9002);
-  server_address.sin_addr.s_addr = INADDR_ANY; //IP ADDRESS
-
-  if(!bind(server_socket, (struct sockaddr *) &server_address, sizeof(server_address))){
-      printf("Binded succesfully!\n");
-  }
-
-}
-void send_message(char* message){
-  char server_message[256];
-  strcpy(server_message, message);
-
-  send(client_socket, server_message, sizeof(server_message), 0);
+void chat(unsigned int client_socket){
+    char buff[MAX];
+    int n;
+    while(1){
+        bzero(buff, MAX);
+        read(client_socket, buff, sizeof(buff));
+        printf("From client: %s\t To client : ", buff);
+        bzero(buff, MAX);
+        n = 0;
+        while((buff[n++] = getchar()) != '\n');
+        write(client_socket, buff, sizeof(buff));
+        if(strncmp("exit", buff, 4) == 0){
+            printf("Server Exit...\n");
+            break;
+        }
+    }
 }
 
 int main() {
 
-  init_server();
+  unsigned int server_socket, client_socket, len;
+  struct sockaddr_in server_address, client_address;
 
-  char client_message[255];
-  scanf("%[^\n]",client_message);
+  server_socket = socket(AF_INET, SOCK_STREAM, 0);
+  if( server_socket == -1 ) {
+    printf("Socket creation failed...\n");
+    exit(0);
+  }
+  else {
+    printf("Socket successfully created..\n");
+  }
+  server_address.sin_family = AF_INET;
+  server_address.sin_port = htons(PORT);
+  server_address.sin_addr.s_addr = htonl(ADDRESS);
 
-  listen(server_socket, 5);
+  if(bind(server_socket, (SA*) &server_address, sizeof(server_address)) != 0){
+      printf("Socket bind failed...\n");
+      exit(0);
+  } else {
+      printf("Socket bind was successful..\n");
+  }
 
-  unsigned int len = sizeof(client_address);
-  client_socket = accept(server_socket, (struct sockaddr*)&client_address, &len);
+  //verifica se o servidor está ouvindo
+  if(listen(server_socket, 5) != 0){
+      printf("Listen failed...\n");
+      exit(0);
+  } else {
+      printf("Server listening..\n");
+  }
 
-  // ENVIA MENSAGEM
+  len = sizeof(client_address);
   
-  send_message(client_message);
+  //verifica se o cliente se conectou 
+  client_socket = accept(server_socket, (SA*)&client_address, &len);
+  if(client_socket < 0){
+      printf("Server accept failed...\n");
+      exit(0);
+  } else {
+      printf("Server accept the client...\n");
+  }
 
-  recv(client_socket, &client_message, sizeof(client_message), 0);
-  printf("Client: %s\n", client_message);
+  chat(client_socket);
+
   // FECHA O SOCKET
   close(server_socket);
 
