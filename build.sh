@@ -1,5 +1,5 @@
 #!/bin/sh
 
-g++ -o client client.c
+g++ -o client src/client.c
 
-g++ -o server server.c
+g++ -o server src/server.c
