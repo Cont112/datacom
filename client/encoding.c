@@ -8,7 +8,8 @@
 wchar_t *string_to_binary(wchar_t *s) {
   if (s == NULL)
     return 0;
-  size_t len = wcslen(s);
+
+  size_t len = wcslen(s) - 1; // ignorar o \n
 
   wchar_t *binary = (wchar_t *)malloc((len * 8 + 1) *
                                       sizeof(wchar_t)); // 8 bits por caractere
@@ -29,7 +30,9 @@ wchar_t *string_to_binary(wchar_t *s) {
 wchar_t *binary_to_string(wchar_t *b) {
   if (b == NULL)
     return 0;
+
   size_t len = wcslen(b);
+
   if (len % 8 != 0)
     return 0; // verifica se a sequencia de bits pode ser traduzida
 
@@ -53,18 +56,19 @@ wchar_t *binary_to_string(wchar_t *b) {
   return s;
 }
 
-int *encode_2b1q(wchar_t *bits) {
+int *encode_2b1q(wchar_t *bits, size_t len) {
   if (bits == NULL)
     return 0;
-  size_t len = wcslen(bits);
 
-  int *encoded = (int *)malloc((len / 2 + 1) * sizeof(int));
+
+  int *encoded = (int *)malloc((len + 1) * sizeof(int));
+
   if (encoded == NULL)
     return 0;
 
   int j = 0;
   bool prev_value = true; // assume que o valor original positivo
-  for (size_t i = 0; i < len; i += 2) {
+  for (size_t i = 0; i < 2 * len; i += 2) {
     if (bits[i] == L'0' && bits[i + 1] == L'0') {
       if (prev_value) {
         encoded[j] = 1;
@@ -103,30 +107,84 @@ int *encode_2b1q(wchar_t *bits) {
   return encoded;
 }
 
-wchar_t * decode_2b1q (int * signal) { 
-  if(signal == NULL) return 0;
+wchar_t *decode_2b1q(int *signal, size_t len) {
+  if (signal == NULL)
+    return 0;
 
-  size_t len = sizeof(signal);
-  wprintf(L"%d\n", len);
+  wchar_t *decoded = (wchar_t *)malloc((len * 2 + 1) * sizeof(wchar_t));
+  if (decoded == NULL)
+    return 0;
 
-  return NULL; 
+
+  bool prev = true;
+  for(size_t i =0; i < 2*len; i++){
+    if(signal[i] == 3){
+      if(prev){
+        decoded[2*i] = L'0';
+        decoded[2*i+1] = L'1';
+      } else {
+        decoded[2*i] = L'1';
+        decoded[2*i+1] = L'1';
+      }
+      prev = true;
+    }else if (signal[i] == 1){
+      if(prev){
+        decoded[2*i] = L'0';
+        decoded[2*i + 1] = L'0';
+      }else{
+        decoded[2*i] = L'1';
+        decoded[2*i + 1] = L'0';
+      }
+      prev = true;
+    }else if (signal[i] == -1){
+      if(prev) {
+        decoded[2*i] = L'1';
+        decoded[2*i +1] = L'0';
+      }else{ 
+        decoded[2*i] = L'0';
+        decoded[2*i + 1] = L'0';
+      }
+      prev = false;
+    }else if(signal[i] == -3){
+      if(prev) {
+        decoded[2*i] = L'1';
+        decoded[2*i +1] = L'1';
+      }else{ 
+        decoded[2*i] = L'0';
+        decoded[2*i + 1] = L'1';
+      }
+      prev = false;
+    } 
+  }
+  decoded[2*len] = L'\0';
+  return decoded;
 }
 
 int main() {
   setlocale(LC_ALL, "en_US.UTF-8");
   wchar_t ch[256];
-  wchar_t *bin;
+  wchar_t *bin, *decoded;
   int *encoded;
   if (fgetws(ch, 256, stdin) != NULL) {
     bin = string_to_binary(ch);
     wprintf(L"%ls\n", bin);
-    wprintf(L"%ls\n", binary_to_string(bin));
   }
 
-  encoded = encode_2b1q(bin);
+  size_t n = wcslen(bin) / 2;
+  encoded = encode_2b1q(bin, n);
 
+  for (int i = 0; i < n; i++) {
+    wprintf(L"%d ", encoded[i]);
+  }
+  wprintf(L"\n");
 
+  decoded = decode_2b1q(encoded, n);
+  
+  wprintf(L"%ls\n", decoded);
+  
+  wprintf(L"%ls\n", binary_to_string(decoded));
   free(bin);
   free(encoded);
+  free(decoded);
   return 0;
 }
