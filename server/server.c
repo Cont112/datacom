@@ -65,7 +65,7 @@ int main() {
   len = sizeof(client_address);
   
   //verifica se o cliente se conectou 
-  client_socket = accept(server_socket, (SA*)&client_address, &len);
+  client_socket = accept(server_socket, (SA*) &client_address, &len);
   if(client_socket < 0){
       printf("Server accept failed...\n");
       exit(0);

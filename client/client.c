@@ -54,7 +54,7 @@ int main() {
   server_address.sin_port = htons(PORT);
   server_address.sin_addr.s_addr = htonl(ADDRESS);
 
-  if( connect(network_socket, (SA*)&server_address, sizeof(server_address)) != 0 ) {
+  if(connect(network_socket, (SA*)&server_address, sizeof(server_address)) != 0 ) {
     printf("Connection with the server failed...\n");
     exit(0);
   }

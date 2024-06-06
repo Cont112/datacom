@@ -9,7 +9,7 @@ wchar_t *string_to_binary(wchar_t *s) {
   if (s == NULL)
     return 0;
 
-  size_t len = wcslen(s) - 1; // ignorar o \n
+  size_t len = wcslen(s); // ignorar o \n
 
   wchar_t *binary = (wchar_t *)malloc((len * 8 + 1) *
                                       sizeof(wchar_t)); // 8 bits por caractere
@@ -59,7 +59,6 @@ wchar_t *binary_to_string(wchar_t *b) {
 int *encode_2b1q(wchar_t *bits, size_t len) {
   if (bits == NULL)
     return 0;
-
 
   int *encoded = (int *)malloc((len + 1) * sizeof(int));
 
@@ -115,49 +114,51 @@ wchar_t *decode_2b1q(int *signal, size_t len) {
   if (decoded == NULL)
     return 0;
 
-
   bool prev = true;
-  for(size_t i =0; i < 2*len; i++){
-    if(signal[i] == 3){
-      if(prev){
-        decoded[2*i] = L'0';
-        decoded[2*i+1] = L'1';
+  for (size_t i = 0; i < 2 * len; i++) {
+    if (signal[i] == 3) {
+      if (prev) {
+        decoded[2 * i] = L'0';
+        decoded[2 * i + 1] = L'1';
       } else {
-        decoded[2*i] = L'1';
-        decoded[2*i+1] = L'1';
+        decoded[2 * i] = L'1';
+        decoded[2 * i + 1] = L'1';
       }
       prev = true;
-    }else if (signal[i] == 1){
-      if(prev){
-        decoded[2*i] = L'0';
-        decoded[2*i + 1] = L'0';
-      }else{
-        decoded[2*i] = L'1';
-        decoded[2*i + 1] = L'0';
+    } else if (signal[i] == 1) {
+      if (prev) {
+        decoded[2 * i] = L'0';
+        decoded[2 * i + 1] = L'0';
+      } else {
+        decoded[2 * i] = L'1';
+        decoded[2 * i + 1] = L'0';
       }
       prev = true;
-    }else if (signal[i] == -1){
-      if(prev) {
-        decoded[2*i] = L'1';
-        decoded[2*i +1] = L'0';
-      }else{ 
-        decoded[2*i] = L'0';
-        decoded[2*i + 1] = L'0';
+    } else if (signal[i] == -1) {
+      if (prev) {
+        decoded[2 * i] = L'1';
+        decoded[2 * i + 1] = L'0';
+      } else {
+        decoded[2 * i] = L'0';
+        decoded[2 * i + 1] = L'0';
       }
       prev = false;
-    }else if(signal[i] == -3){
-      if(prev) {
-        decoded[2*i] = L'1';
-        decoded[2*i +1] = L'1';
-      }else{ 
-        decoded[2*i] = L'0';
-        decoded[2*i + 1] = L'1';
+    } else if (signal[i] == -3) {
+      if (prev) {
+        decoded[2 * i] = L'1';
+        decoded[2 * i + 1] = L'1';
+      } else {
+        decoded[2 * i] = L'0';
+        decoded[2 * i + 1] = L'1';
       }
       prev = false;
-    } 
+    }
   }
-  decoded[2*len] = L'\0';
+  decoded[2 * len] = L'\0';
   return decoded;
+}
+
+void encrypt(wchar_t *s, wchar_t* key) {
 }
 
 int main() {
@@ -165,10 +166,20 @@ int main() {
   wchar_t ch[256];
   wchar_t *bin, *decoded;
   int *encoded;
+  wchar_t key[] = L"Arroz";
+
   if (fgetws(ch, 256, stdin) != NULL) {
-    bin = string_to_binary(ch);
-    wprintf(L"%ls\n", bin);
+      size_t len = wcslen(ch);
+      if(ch[len - 1] == L'\n') {
+          ch[len - 1] = L'\0';
+      }
   }
+
+  //xor_cypher(ch, key);
+  //wprintf(L"%ls\n", ch);
+
+  bin = string_to_binary(ch);
+  wprintf(L"%ls\n", bin);
 
   size_t n = wcslen(bin) / 2;
   encoded = encode_2b1q(bin, n);
@@ -178,11 +189,23 @@ int main() {
   }
   wprintf(L"\n");
 
+  FILE *fptr;
+  fptr = fopen("encoded.txt", "a");
+  for (int i = 0; i < n; i++) {
+    fprintf(fptr, "%d %d\n ", i, encoded[i]);
+  }
+  fclose(fptr);
+
   decoded = decode_2b1q(encoded, n);
-  
+
   wprintf(L"%ls\n", decoded);
-  
-  wprintf(L"%ls\n", binary_to_string(decoded));
+
+  bin = binary_to_string(decoded);
+  wprintf(L"%ls\n", bin);
+
+ // xor_cypher(bin, key);
+  //wprintf(L"%ls\n", bin);
+
   free(bin);
   free(encoded);
   free(decoded);
