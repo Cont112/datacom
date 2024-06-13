@@ -1,71 +1,114 @@
 #include <stdio.h>
-#include <arpa/inet.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <string.h>
 
-#define MAX 256
-#define PORT 9002
-#define ADDRESS INADDR_ANY
-#define SA struct sockaddr
+#include <sys/types.h>
+#include <sys/socket.h>
 
-void chat(unsigned int network_socket){
-  char buffer[MAX];
-  int n;
+#include <netinet/in.h>
+#include <unistd.h>
 
-  while(1) {
-    bzero(buffer, sizeof(buffer));
-    printf("Enter the string : ");
-    n = 0;
-    while((buffer[n++] = getchar()) != '\n');
-    write(network_socket, buffer, sizeof(buffer));
-    bzero(buffer, sizeof(buffer));
-    read(network_socket, buffer, sizeof(buffer));
-    printf("From Server : %s", buffer);
-    if((strncmp(buffer, "exit", 4)) == 0) {
-      printf("Client Exit...\n");
-      break;
+void str_to_bin(char* str, int str_len, char* bin, int* bin_len){
+  int i, j;
+  (*bin_len)=8*str_len;
+  for(i = 0; i < str_len; i++){
+    for(j = 0; j < 8; j++){
+      bin[i*8+j]=((str[i] & (1 << 7-j)) >> 7-j);
     }
   }
 }
 
-
-int main() {
-
-  // CRIA UM SOCKET
-  unsigned int network_socket;
-  struct sockaddr_in server_address, client_address;
-
-  network_socket = socket(AF_INET, SOCK_STREAM, 0);
-  if( network_socket == -1 ) {
-    printf("Socket creation failed...\n");
-    exit(0);
+void bin_to_c2b1q(char* bin, int bin_len, char* cod, int* cod_len){
+  int i, j = 0, pos = 1;
+  (*cod_len) = bin_len/2;
+  for(i = 0; i < bin_len; i+=2){
+    if(bin[i] == 0 && bin[i+1] == 0){
+      cod[j++] = (pos ? 1 : -1);
+    }
+    else if(bin[i] == 0 && bin[i+1] == 1){
+      cod[j++] = (pos ? 3 : -3);
+    }
+    else if(bin[i] == 1 && bin[i+1] == 0){
+      cod[j++] = (pos ? -1 : 1);
+      pos = !pos;
+    }
+    else if(bin[i] == 1 && bin[i+1] == 1){
+      cod[j++] = (pos ? -3 : 3);
+      pos = !pos;
+    }
+    else{
+      cod[j++] = 0;
+    }
   }
-  else {
-    printf("Socket successfully created..\n");
+}
+
+int PotModN(int base, int power, int modulus){
+  int ans = 1;
+  for(int i = 0; i < power & 0xFF; i++){
+    ans *= base & 0xFF;
+    ans %= modulus & 0xFF;
+  }
+  return ans & 0xFF;
+}
+
+void encrypt(char* msg, int msg_len, int publicKey, int modulus){
+  for(int i = 0; i < msg_len; i++){
+    msg[i] = PotModN(msg[i], publicKey, modulus);
+  }
+}
+
+int main(){
+  int server_sock;
+  struct sockaddr_in server_addr;
+
+  server_sock = socket(PF_INET, SOCK_STREAM, 0);
+  if(server_sock < 0){
+    return 1;
   }
 
-  bzero(&server_address, sizeof(server_address));
-
-  server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(PORT);
-  server_address.sin_addr.s_addr = htonl(ADDRESS);
-
-  if(connect(network_socket, (SA*)&server_address, sizeof(server_address)) != 0 ) {
-    printf("Connection with the server failed...\n");
-    exit(0);
-  }
-  else {
-    printf("Connected to the server..\n");
+  server_addr.sin_family = AF_INET;
+  server_addr.sin_port = htons(3000);
+  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  if(connect(server_sock, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0){
+    return 1;
   }
 
-  chat(network_socket);
+  char rsa_header[2];
+  ssize_t bytes_rec = recv(server_sock, rsa_header, sizeof(rsa_header), 0);
+  int n = rsa_header[0] & 0xFF;
+  int e = rsa_header[1] & 0xFF;
+  printf("Public key(e, n): (%d, %d)\n", e, n);
 
-  // FECHA O SOCKET
-  close(network_socket);
+  char message[] = "O pé do zé tem chulé";
+  printf("Message: %s\n", message);
 
+  encrypt(message, sizeof(message), e, n);
+  printf("Encrypted Message: ");
+  for(int i = 0; i < sizeof(message); i++){
+    printf("%c", message[i]);
+  }
+  printf("\n");
+
+  char bin[256];
+  int bin_len;
+  str_to_bin(message, sizeof(message), bin, &bin_len);
+  printf("Binary Message: ");
+  for(int i = 0; i < bin_len; i++){
+    printf("%d", bin[i]);
+  }
+  printf("\n");
+
+  char cod[256];
+  int cod_len;
+  bin_to_c2b1q(bin, bin_len, cod, &cod_len);
+  printf("Codification Message: ");
+  for(int i = 0; i < cod_len; i++){
+    printf("%d ", cod[i]);
+  }
+  printf("\n");
+
+  ssize_t bytes_sent = send(server_sock, cod, cod_len, 0);
+  printf("Sent %zd Bytes\n", bytes_sent);
+
+  close(server_sock);
   return 0;
 }
