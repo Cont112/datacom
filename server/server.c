@@ -172,6 +172,15 @@ int main(){
   }
   printf("\n");
 
+  FILE *fptr;
+  fptr = fopen("server.txt", "w");
+
+  for(int i = 0; i < sizeof(buffer); i++){
+    fprintf(fptr, "%d %d\n", i, buffer[i]);
+  }
+
+  fclose(fptr);
+
   char bin[256];
   int bin_len;
   c2b1q_to_bin(buffer, bytes_rec, bin, &bin_len);

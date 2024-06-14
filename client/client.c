@@ -106,6 +106,15 @@ int main(){
   }
   printf("\n");
 
+  FILE *fptr;
+  fptr = fopen("client.txt", "w");
+
+  for(int i = 0; i < cod_len; i++){
+    fprintf(fptr, "%d %d\n", i, cod[i]);
+  }
+
+  fclose(fptr);
+
   ssize_t bytes_sent = send(server_sock, cod, cod_len, 0);
   printf("Sent %zd Bytes\n", bytes_sent);
 
