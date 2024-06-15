@@ -6,6 +6,7 @@
 
 #include <netinet/in.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 
 void str_to_bin(char* str, int str_len, char* bin, int* bin_len){
   int i, j;
@@ -67,7 +68,7 @@ int main(){
 
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(3000);
-  server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_addr.sin_addr.s_addr = inet_addr("10.181.5.209");
   if(connect(server_sock, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0){
     return 1;
   }
