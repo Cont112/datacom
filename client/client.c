@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 
+#include <locale.h>
+
 void str_to_bin(char* str, int str_len, char* bin, int* bin_len){
   int i, j;
   (*bin_len)=8*str_len;
@@ -58,6 +60,7 @@ void encrypt(char* msg, int msg_len, int publicKey, int modulus){
 }
 
 int main(){
+  setlocale(LC_ALL, "");
   int server_sock;
   struct sockaddr_in server_addr;
 
@@ -68,7 +71,7 @@ int main(){
 
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(3000);
-  server_addr.sin_addr.s_addr = inet_addr("10.181.5.209");
+  server_addr.sin_addr.s_addr = inet_addr("10.181.6.224");
   if(connect(server_sock, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0){
     return 1;
   }
@@ -79,45 +82,72 @@ int main(){
   int e = rsa_header[1] & 0xFF;
   printf("Public key(e, n): (%d, %d)\n", e, n);
 
-  char message[] = "O pé do zé tem chulé";
+
+  unsigned char message[] = "á";
   printf("Message: %s\n", message);
-
-  encrypt(message, sizeof(message), e, n);
-  printf("Encrypted Message: ");
   for(int i = 0; i < sizeof(message); i++){
-    printf("%c", message[i]);
+    printf("%u ", message[i]);
   }
   printf("\n");
+  // encrypt(message, sizeof(message), e, n);
+  // printf("Encrypted Message: ");
+  // for(int i = 0; i < sizeof(message); i++){
+  //   printf("%c", message[i]);
+  // }
+  // printf("\n");
 
-  char bin[256];
-  int bin_len;
-  str_to_bin(message, sizeof(message), bin, &bin_len);
-  printf("Binary Message: ");
-  for(int i = 0; i < bin_len; i++){
-    printf("%d", bin[i]);
-  }
-  printf("\n");
+  // char bin[256];
+  // int bin_len;
+  // str_to_bin(message, sizeof(message), bin, &bin_len);
 
-  char cod[256];
-  int cod_len;
-  bin_to_c2b1q(bin, bin_len, cod, &cod_len);
-  printf("Codification Message: ");
-  for(int i = 0; i < cod_len; i++){
-    printf("%d ", cod[i]);
-  }
-  printf("\n");
+  // // bin[0]=0;
+  // // bin[1]=0;
+  // // bin[2]=0;
+  // // bin[3]=0;
+  
+  // // bin[4]=0;
+  // // bin[5]=0;
+  // // bin[6]=0;
+  // // bin[7]=0;
 
-  FILE *fptr;
-  fptr = fopen("client.txt", "w");
+  // // bin[8]=1;
+  // // bin[9]=1;
+  // // bin[10]=0;
+  // // bin[11]=1;
+  
+  // // bin[12]=1;
+  // // bin[13]=0;
+  // // bin[14]=0;
+  // // bin[15]=1;
 
-  for(int i = 0; i < cod_len; i++){
-    fprintf(fptr, "%d %d\n", i, cod[i]);
-  }
+  // // bin_len = 16;
 
-  fclose(fptr);
+  // printf("Binary Message: ");
+  // for(int i = 0; i < bin_len; i++){
+  //   printf("%d", bin[i]);
+  // }
+  // printf("\n");
 
-  ssize_t bytes_sent = send(server_sock, cod, cod_len, 0);
-  printf("Sent %zd Bytes\n", bytes_sent);
+  // char cod[256];
+  // int cod_len;
+  // bin_to_c2b1q(bin, bin_len, cod, &cod_len);
+  // printf("Codification Message: ");
+  // for(int i = 0; i < cod_len; i++){
+  //   printf("%d ", cod[i]);
+  // }
+  // printf("\n");
+
+  // FILE *fptr;
+  // fptr = fopen("client.txt", "w");
+
+  // for(int i = 0; i < cod_len; i++){
+  //   fprintf(fptr, "%d %d\n", i, cod[i]);
+  // }
+
+  // fclose(fptr);
+
+  // ssize_t bytes_sent = send(server_sock, cod, cod_len, 0);
+  // printf("Sent %zd Bytes\n", bytes_sent);
 
   close(server_sock);
   return 0;
