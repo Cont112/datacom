@@ -11,3 +11,4 @@
 #define RATIO_2_5 2./5
 #define RATIO_3_5 3./5
 #define RATIO_1_2 1./2
+#define FONT_SPACING 1

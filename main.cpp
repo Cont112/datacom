@@ -8,9 +8,8 @@
 #include "Manager/InputManager.hpp"
 
 
-
 void getAllComponents();
-void select(); // VAI PARA O INPUT
+
 
 ConnSection con;
 MsgSection msg;
@@ -19,13 +18,19 @@ map<int, Component*> allComponents;
 
 InputManager* pInput = InputManager::getInstance();
 
-int currentSelected = -1; 
 
 int main(void)
 {
+    bool client;
 
+    cout << "Client(1) or Server(0)? ";
+    cin >> client;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "DataCom");
+
+    con.init(client);
+    msg.init();
+    plot.init();
 
     SetTargetFPS(60);
 
@@ -38,9 +43,10 @@ int main(void)
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            con.draw();
-            msg.draw();
-            plot.draw();
+            con.update();
+            cout << con.getConnData().first << " " << con.getConnData().second << endl;
+            msg.update();
+            plot.update();
         EndDrawing();
 
         pInput->execute();
@@ -71,51 +77,3 @@ void getAllComponents(){
 
 }
 
-
-
-void select(){
-    //iterar todas as textbox, ver se o mouse colidiu com alguma e se clicou, setar selected para true
-    //se clicou fora de todas, setar selected para false
-
-    int mouseColision = false;
-    int mouseClick = false;
-    int id = -1;
-    
-
-    for(int i = 0; i < Component::getIdCounter(); i++){
-        Component* c = allComponents[i];
-
-        if(CheckCollisionPointRec(GetMousePosition(), *c->getBox())){
-            mouseColision = true;
-            if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-                id = c->getId();
-                mouseClick = true;
-            }
-        } 
-    }
-
-    if(mouseColision){
-        SetMouseCursor(MOUSE_CURSOR_IBEAM);
-        if(mouseClick){
-            if(id != -1 && id != currentSelected){
-            Textbox* t = (Textbox*) allComponents[id];
-            t->setSelected(true);
-
-            if(currentSelected != -1){
-                t = (Textbox*) allComponents[currentSelected];
-                t->setSelected(false);
-            }
-            currentSelected = id;
-        }
-        }
-    }else{
-        SetMouseCursor(MOUSE_CURSOR_DEFAULT);
-        if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-            if(currentSelected != -1){
-                Textbox* t = (Textbox*) allComponents[currentSelected];
-                t->setSelected(false);
-                currentSelected = -1;
-            }
-        }
-    }
-}

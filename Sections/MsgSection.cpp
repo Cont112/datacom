@@ -1,7 +1,6 @@
 #include "MsgSection.hpp"
 
 MsgSection::MsgSection(){
-    init();
 }
 
 MsgSection::~MsgSection(){
@@ -19,5 +18,19 @@ void MsgSection::init(){
     setSize(width, height);
     updateBox();
 
+    Textbox* tb = new Textbox("Send Message:",posX + INNER_PADDING, posY+INNER_PADDING+110, width - 2*INNER_PADDING, 60);
+    
+    Textbox* tb2 = new Textbox("Response:",posX+ INNER_PADDING, posY+INNER_PADDING+200, width - 2*INNER_PADDING, 60);
+    tb2->setSelectable(false);
+    
+    Button* tb3 = new Button("SEND", posX + width/2 - 100, posY+INNER_PADDING+320, 180, 40);
 
+    addComponent((Component *)tb);
+    addComponent((Component *)tb2);
+    addComponent((Component *)tb3);
+
+
+}
+void MsgSection::onButtonClick(){
+    cout << "message Button Clicked" << endl;
 }

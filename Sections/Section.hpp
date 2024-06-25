@@ -2,15 +2,16 @@
 #include "../stdafx.hpp"
 #include "../Components/Component.hpp"
 #include "../Components/Textbox.hpp"
+#include "../Components/Button.hpp"
 
 using namespace std;
 
+
 class Section {
-private:
+protected:
     string title;
     Rectangle border;
     vector<Component*> components; //lista de componentes
-
     float posX, posY, width, height;
 
 public:
@@ -21,7 +22,7 @@ public:
 
     void addComponent(Component* c);
     vector<Component*> getComponents() {return components;}
-    void draw();
+    void update();
 
     void init();
 
@@ -31,5 +32,6 @@ public:
     void setPosition(float px, float py) {posX = px; posY = py;}
     void setSize(float w, float h) {width = w; height = h;}
 
-    void updateBox(){border={posX,posY,width,height};}
+    virtual void updateBox(){border={posX,posY,width,height};}
+    virtual void onButtonClick() = 0;
 };

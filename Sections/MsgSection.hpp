@@ -10,5 +10,5 @@ public:
     ~MsgSection();
 
     void init();
-
+    void onButtonClick();
 };

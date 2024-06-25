@@ -1,14 +1,18 @@
 #pragma once
 #include "../stdafx.hpp"
-
 using namespace std;
+
 
 class Component {
 protected:
     string label;
     Rectangle box;
     int id;
+    int type;
     static int idCounter;
+    bool selected;
+    bool selectable;
+
 
     float posX, posY, width, height;
 
@@ -26,7 +30,16 @@ public:
     inline int getId() {return id;}
     static int getIdCounter() {return idCounter;}
 
+    void setSelected(bool s) {selected = s;}
+    bool isSelected() {return selected;}
+
+    void setSelectable(bool s) {selectable = s;}
+    bool getSelectable() {return selectable;}
+
+    int getType(){return type;}
+    
     virtual Rectangle* getBox() = 0;
 
     virtual void draw() = 0;
+    virtual void update() = 0;
 };

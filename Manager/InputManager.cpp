@@ -32,6 +32,7 @@ void InputManager::execute(){
     select();
     getKeys();
 }
+
 void InputManager::getKeys(){
     if(currentSelected != -1){
         Textbox* t = (Textbox*) allComponents[currentSelected];
@@ -44,11 +45,11 @@ void InputManager::getKeys(){
         }else if(IsKeyPressed(KEY_DELETE)){
             t->clear();
         }else{
-            for(int i = 32; i < 128; i++){
-                if(IsKeyPressed(i)){
-                    t->addChar(i);
-                }
+            unsigned char c = GetCharPressed();
+            if(c != 0){
+                t->addChar(c);
             }
+
         }
     }
 }
@@ -63,9 +64,15 @@ void InputManager::select(){
     int id = -1;
     
 
+    if(currentSelected != -1 && allComponents[currentSelected]->isSelected() == false){
+        currentSelected = -1; //SE FOR BOTAO VOLTAR PARA -1
+    }
+
     for(int i = 0; i < Component::getIdCounter(); i++){
         Component* c = allComponents[i];
-
+        if(c->getSelectable() == false){
+            continue;
+        }
         if(CheckCollisionPointRec(GetMousePosition(), *c->getBox())){
             mouseCollision = true;
             if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
@@ -79,12 +86,10 @@ void InputManager::select(){
         SetMouseCursor(MOUSE_CURSOR_IBEAM);
         if(mouseClick){
             if(id != -1 && id != currentSelected){
-            Textbox* t = (Textbox*) allComponents[id];
-            t->setSelected(true);
+            allComponents[id]->setSelected(true);
 
             if(currentSelected != -1){
-                t = (Textbox*) allComponents[currentSelected];
-                t->setSelected(false);
+                allComponents[currentSelected]->setSelected(false);
             }
             currentSelected = id;
         }
@@ -93,8 +98,8 @@ void InputManager::select(){
         SetMouseCursor(MOUSE_CURSOR_DEFAULT);
         if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
             if(currentSelected != -1){
-                Textbox* t = (Textbox*) allComponents[currentSelected];
-                t->setSelected(false);
+                allComponents[currentSelected]->setSelected(false);
+                
                 currentSelected = -1;
             }
         }

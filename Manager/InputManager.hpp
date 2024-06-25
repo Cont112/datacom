@@ -29,5 +29,7 @@ class InputManager {
         void select();
         void getKeys();
 
+
+        void resetSelected() { currentSelected = -1; }
         void execute();
 };

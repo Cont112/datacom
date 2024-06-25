@@ -1,7 +1,6 @@
 #include "PlotSection.hpp"
 
 PlotSection::PlotSection(){
-    init();
 }
 
 PlotSection::~PlotSection(){
@@ -18,5 +17,8 @@ void PlotSection::init(){
     setPosition(posX, posY);
     setSize(width, height);
     updateBox();
+}
 
+void PlotSection::onButtonClick(){
+    cout << "PlotSection Button Clicked" << endl;
 }

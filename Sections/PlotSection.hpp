@@ -11,4 +11,6 @@ public:
 
     void init();
 
+    void onButtonClick();
+
 };

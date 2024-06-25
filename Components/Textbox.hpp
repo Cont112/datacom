@@ -12,8 +12,7 @@ class Textbox: public Component {
         string text;
         Rectangle textBox;
         int letterCount;
-        bool mouseOnText;
-        bool selected;
+        int charLimit;
 
 
     public:
@@ -26,15 +25,17 @@ class Textbox: public Component {
         inline string getText() {return text;}
         inline void setText(const char* t) {text = t;}
 
-        void addChar(char c);
+        void addChar(unsigned char c);
         void removeChar();
         void clear();
 
-        void setSelected(bool s) {selected = s;}
+        void calcCharLimit();
+
 
         Rectangle* getBox() {return &textBox;}
 
         void draw();
         void init();
+        void update();
 
 };
