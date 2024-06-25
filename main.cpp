@@ -5,6 +5,7 @@
 #include "Sections/ConnSection.hpp"
 #include "Sections/MsgSection.hpp"
 #include "Sections/PlotSection.hpp"
+#include "Manager/InputManager.hpp"
 
 
 
@@ -14,8 +15,11 @@ void select(); // VAI PARA O INPUT
 ConnSection con;
 MsgSection msg;
 PlotSection plot;
-int currentSelected = -1; 
 map<int, Component*> allComponents;
+
+InputManager* pInput = InputManager::getInstance();
+
+int currentSelected = -1; 
 
 int main(void)
 {
@@ -27,6 +31,8 @@ int main(void)
 
     getAllComponents();
 
+    pInput->setMap(allComponents);
+
     while (!WindowShouldClose())
     {
 
@@ -36,9 +42,8 @@ int main(void)
             msg.draw();
             plot.draw();
         EndDrawing();
-        
-        select();
 
+        pInput->execute();
     }
 
     CloseWindow();

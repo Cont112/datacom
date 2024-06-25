@@ -3,6 +3,7 @@
 #include "Component.hpp"
 
 #define FONT_SIZE 26
+#define LIMIT 20
 using namespace std;
 
 
@@ -24,6 +25,10 @@ class Textbox: public Component {
 
         inline string getText() {return text;}
         inline void setText(const char* t) {text = t;}
+
+        void addChar(char c);
+        void removeChar();
+        void clear();
 
         void setSelected(bool s) {selected = s;}
 

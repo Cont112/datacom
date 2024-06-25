@@ -43,3 +43,22 @@ void Textbox::draw(){
     DrawText(label.c_str(), posX,posY, FONT_SIZE, GRAY);
     DrawText(text.c_str(), posX+10, posY+5+FONT_SIZE, FONT_SIZE, GRAY);
 }
+
+void Textbox::addChar(char c){
+    if(letterCount < LIMIT){
+        text += c;
+        letterCount++;
+    }
+}
+
+void Textbox::removeChar(){
+    if(letterCount > 0){
+        text.pop_back();
+        letterCount--;
+    }
+}
+
+void Textbox::clear(){
+    text = "";
+    letterCount = 0;
+}

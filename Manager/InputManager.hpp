@@ -1,8 +1,8 @@
 #pragma once
 #include "../stdafx.hpp"
-#include "Components/Component.hpp"
-#include "Components/Textbox.hpp"
-#include "Components/Section.hpp"
+#include "../Components/Component.hpp"
+#include "../Components/Textbox.hpp"
+#include "../Sections/Section.hpp"
 
 using namespace std;
 
@@ -13,7 +13,7 @@ class InputManager {
 
         int currentSelected;
 
-        map<int, Component> allComponents;
+        map<int, Component*> allComponents;
 
         // Singleton
         static InputManager *instance;
@@ -24,7 +24,10 @@ class InputManager {
         static InputManager* getInstance();
         void deleteInstance();
 
+        void setMap(map<int, Component*> m) { allComponents = m; }
+
         void select();
+        void getKeys();
 
         void execute();
 };
