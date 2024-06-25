@@ -17,18 +17,27 @@ class Client{
 private:
 private:
     int clientSocket;
+    bool socketCreated;
     string serverAddress;
     int port;
     sockaddr_in serverAddressStruct;
 
+    static Client* instance;
+    Client();
+    
 public:
-    Client(string serverAddress, int port);
     ~Client();
 
+    static Client* getInstance();
+    void deleteInstance();
+
     void connectToServer();
+    void createSocket(string serverAddress, int port);
     void sendMessage(string message);
     string receiveMessage();
     void closeConnection();
+
+    bool getScoketCreated() {return socketCreated;}
 
     // void str_to_bin(char* str, int str_len, char* bin, int* bin_len);
     // void bin_to_c2b1q(char* bin, int bin_len, char* cod, int* cod_len);

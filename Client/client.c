@@ -71,13 +71,13 @@ int main(){
 
   server_addr.sin_family = AF_INET;
   server_addr.sin_port = htons(3000);
-  server_addr.sin_addr.s_addr = inet_addr("10.181.6.224");
+  server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
   if(connect(server_sock, (struct sockaddr*) &server_addr, sizeof(server_addr)) < 0){
     return 1;
   }
 
   char rsa_header[2];
-  ssize_t bytes_rec = recv(server_sock, rsa_header, sizeof(rsa_header), 0);
+  //ssize_t bytes_rec = recv(server_sock, rsa_header, sizeof(rsa_header), 0);
   int n = rsa_header[0] & 0xFF;
   int e = rsa_header[1] & 0xFF;
   printf("Public key(e, n): (%d, %d)\n", e, n);

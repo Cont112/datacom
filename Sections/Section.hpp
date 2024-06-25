@@ -32,6 +32,6 @@ public:
     void setPosition(float px, float py) {posX = px; posY = py;}
     void setSize(float w, float h) {width = w; height = h;}
 
-    virtual void updateBox(){border={posX,posY,width,height};}
+    void updateBox(){border={posX,posY,width,height};}
     virtual void onButtonClick() = 0;
 };

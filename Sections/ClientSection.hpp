@@ -1,25 +1,21 @@
 #pragma once
 #include "Section.hpp"
 #include "../Client/Client.hpp"
-#include "../Server/Server.hpp"
 
 using namespace std;
 
 
-class ConnSection : public Section {
+class ClientSection : public Section {
 private:
     pair<string, string> conn;
     bool isClient;
-    Client* client;
-    Server* server;
+    Client* client = nullptr;
 
 public:
-    ConnSection();
-    ~ConnSection();
+    ClientSection();
+    ~ClientSection();
 
-    void initClient();
-    void initServer();
-    void init(bool isClient);
+    void init();
 
     void onButtonClick();
 

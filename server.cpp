@@ -2,16 +2,17 @@
 #include "Components/Textbox.hpp"
 #include "Components/Component.hpp"
 #include "Sections/Section.hpp"
-#include "Sections/ConnSection.hpp"
 #include "Sections/MsgSection.hpp"
 #include "Sections/PlotSection.hpp"
+#include "Sections/ServerSection.cpp"
 #include "Manager/InputManager.hpp"
 
 
 void getAllComponents();
 
 
-ConnSection con;
+ServerSection server;
+
 MsgSection msg;
 PlotSection plot;
 map<int, Component*> allComponents;
@@ -21,14 +22,15 @@ InputManager* pInput = InputManager::getInstance();
 
 int main(void)
 {
-    bool client;
-
-    cout << "Client(1) or Server(0)? ";
-    cin >> client;
+    cin.tie(0);
+    ios_base::sync_with_stdio();
+    
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "DataCom");
+    
 
-    con.init(client);
+    server.init();
+
     msg.init();
     plot.init();
 
@@ -43,8 +45,7 @@ int main(void)
 
         BeginDrawing();
             ClearBackground(RAYWHITE);
-            con.update();
-            cout << con.getConnData().first << " " << con.getConnData().second << endl;
+            server.update();
             msg.update();
             plot.update();
         EndDrawing();
@@ -59,7 +60,7 @@ int main(void)
 
 void getAllComponents(){
     int i = 0;
-    vector<Component*> c = con.getComponents();
+    vector<Component*> c = server.getComponents(); //server.
     vector<Component*> m = msg.getComponents();
     vector<Component*> p = plot.getComponents();
 
