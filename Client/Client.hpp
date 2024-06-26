@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
-
+#include <thread>
 #include <locale.h>
 
 using namespace std;
@@ -24,6 +24,9 @@ private:
     bool hasReceived;
     sockaddr_in serverAddressStruct;
 
+    int N_c;
+    int E_c;
+
     static Client* instance;
     Client();
     
@@ -37,6 +40,7 @@ public:
     void createSocket(string serverAddress, int port);
     void sendMessage(string message);
     string receiveMessage();
+    unsigned char receiveChar();
     void closeConnection();
 
     bool getScoketCreated() {return socketCreated;}
@@ -46,6 +50,7 @@ public:
     void setNonBlocking(bool nonBlocking);
     bool checkConnectionStatus();
 
+    pair<int,int> getPublicKey(){return pair<int,int> {E_c,N_c};}
     int getClientSocket() {return clientSocket;}
 
     // void str_to_bin(char* str, int str_len, char* bin, int* bin_len);

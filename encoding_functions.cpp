@@ -97,7 +97,7 @@ int extendedEuclides(int e, int totiente){
     decryption_key = y1;
     return decryption_key;}
 
-void GetPrivateKey(int *privateKey){
+void GetPrivateKey(unsigned char *privateKey){
   int totiente = (P-1) * (Q-1);
   (*privateKey) = extendedEuclides(E, totiente);
 }
@@ -151,10 +151,13 @@ int PotModN(int base, int power, int modulus){
   return ans & 0xFF;
 }
 
-void encrypt(char* msg, int msg_len, int publicKey, int modulus){
-  for(int i = 0; i < msg_len; i++){
-    msg[i] = PotModN(msg[i], publicKey, modulus);
+string encrypt(char* msg, int msg_len, int publicKey, int modulus){
+  string text = msg;
+  for(int i = 0; i < text.length(); i++){
+    text[i] = PotModN(msg[i], publicKey, modulus);
   }
+  return text;
+
 }
 
 string encryptTemp(string& str, int key){

@@ -64,10 +64,29 @@ void Server::start() {
 
     fcntl(clientSocket, F_SETFL, O_NONBLOCK); // Tornar o socket do cliente não bloqueante
     cout << "Client connected" << endl;
+
+
+    unsigned char serverPrivateKey;/* ... obter a public key do servidor ... */;
+    GetPrivateKey(&serverPrivateKey);
+    privateKey = serverPrivateKey;
+    printf("Private ke y%d\n", privateKey);
+
+    unsigned char serverPublicKey[2];
+    serverPublicKey[0] = N;
+    serverPublicKey[1] = E;
+     
+    if (send(clientSocket, serverPublicKey, sizeof(serverPublicKey), 0) < 0) {
+        perror("Error sending public key");
+        // Lidar com o erro
+    }
 }
 
 void Server::sendMessage(string message){
     send(clientSocket, message.c_str(), message.size(), 0);
+}
+
+void Server::sendChar(unsigned char ch){
+    send(clientSocket,&ch,1,0);
 }
 
 

@@ -38,6 +38,7 @@ void ClientSection::onButtonClick(){
         while(!client->checkConnectionStatus());
         if (client->checkConnectionStatus()) {
          clientSocket = client->getClientSocket(); // Obter o socket do cliente
+
          cout << "Conectado ao servidor" << endl;
     }
     } 

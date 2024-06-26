@@ -48,9 +48,15 @@ void MsgSection::onButtonClick(){
 
     char cod[256];
     int cod_len;
-
+    string encoded;
     //encrypt(message.data(),message.length(),p,m);
-    string encoded  = encryptTemp(message,24);
+    if(isClient){
+        Client* c = Client::getInstance();
+        encoded = encrypt(message.data(), message.length(),c->getPublicKey().first, c->getPublicKey().second);
+    }else{
+        encoded  = encryptTemp(message,24);
+    }
+    
 
     str_to_bin(encoded.data(), encoded.length(), bin, &bin_len);
 
@@ -161,8 +167,16 @@ void MsgSection::convertResponse(){
     tb3->setText(str);
 
     string msg(str);
-    msg = decryptTemp(msg, 24);
-    tb2->setText(msg.c_str());
+    if(!isClient){
+        Server* s = Server::getInstance();
+        decrypt(str, str_len,s->getPrivateKey(), N);
+        tb2->setText(str);
+
+    }else{
+        msg = decryptTemp(msg, 24);
+        tb2->setText(msg.c_str());
+
+    }
 
 
     //decrypt();

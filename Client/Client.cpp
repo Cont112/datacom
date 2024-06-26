@@ -61,7 +61,21 @@ void Client::connectToServer(){
     if (checkConnectionStatus()) {
          cout << "Conectado ao servidor" << endl;
     }
-}
+
+    unsigned char receivedPublicKey[2];
+    int bytesReceived = 0;
+    while (bytesReceived <= 0) { // Loop até receber dados
+        bytesReceived = recv(clientSocket, receivedPublicKey, sizeof(receivedPublicKey), 0);
+        if (bytesReceived < 0 && (errno != EAGAIN && errno != EWOULDBLOCK)) {
+            perror("Error receiving public key");
+            break;
+        }
+        std::this_thread::sleep_for(chrono::milliseconds(10)); // Pequeno atraso
+    }
+    printf("%d %d", receivedPublicKey[0], receivedPublicKey[1]);
+    this->N_c = receivedPublicKey[0];
+    this->E_c = receivedPublicKey[1];
+}   
 
 void Client::sendMessage(string message){
     send(clientSocket, message.c_str(), message.size(), 0);
@@ -88,6 +102,26 @@ string Client::receiveMessage(){
         perror("Error receiving message");
         return "";
     }
+}
+
+unsigned char Client::receiveChar(){
+    unsigned char buffer[2];
+    int bytesReceived = recv(clientSocket, buffer, 1, 0);
+
+    if (bytesReceived > 0) {
+        cout << "chegaram %d" << bytesReceived << "bytes" << endl;
+        return buffer[0]; // Retorna apenas os bytes recebidos
+    } else if (bytesReceived == 0) {
+        // Conexão encerrada
+        return 0;
+    } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
+        // Não há dados disponíveis
+        return 0;
+    } else {
+        // Erro na recepção
+        perror("Error receiving message");
+        return 0;
+    } 
 }
 
 void Client::setNonBlocking(bool nonBlocking) {
