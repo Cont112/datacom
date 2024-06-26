@@ -7,7 +7,7 @@ O comando vai gerar dois arquivos binários, *client* e *server*, que devem ser 
 ### Dependências ###
 O projeto utiliza a bilbioteca Raylib para executar a interface gráfica, dessa forma, é importante ter os aquivos da biblioteca instalados em sua máquina.
 
-![Raylib](https://github.com/raysan5/raylib/blob/master/src/raylib.h)
+![Raylib](https://github.com/raysan5/raylib)
 
 ### Utilização ###
 Primeiro, o servidor deve abrir uma conexão de acordo com a porta informada pelo usuário, e em seguida, aguarda a requisição para se conectar com o cliente.
