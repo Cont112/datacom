@@ -3,6 +3,7 @@
 #include "../Components/Component.hpp"
 #include "../Components/Textbox.hpp"
 #include "../Components/Button.hpp"
+#include "../Components/Plot.hpp"
 
 using namespace std;
 

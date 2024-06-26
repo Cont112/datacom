@@ -8,6 +8,8 @@
 
 #include <netinet/in.h>
 #include <unistd.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -15,10 +17,11 @@ class Server {
 private:
     int serverSocket;
     int clientSocket;
-    bool socketCreated;
+    bool socketCreated = false;
     sockaddr_in serverAddressStruct;
     sockaddr_in clientAddressStruct;
     int port;
+    bool hasReceived;
 
     Server();
     static Server* instance;
@@ -36,5 +39,10 @@ public:
     string receiveMessage();
     void closeConnection();
 
+
     bool getScoketCreated() {return socketCreated;}
+    void setHasReceived(bool hasReceived) {this->hasReceived = hasReceived;}
+    bool getHasReceived() {return hasReceived;}
+
+    int getClientSocket() {return clientSocket;}
 };

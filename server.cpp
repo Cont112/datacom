@@ -31,8 +31,9 @@ int main(void)
 
     server.init();
 
-    msg.init();
     plot.init();
+    msg.init(&plot);
+    msg.setIsClient(false);
 
     SetTargetFPS(60);
 

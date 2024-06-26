@@ -8,6 +8,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <fcntl.h>
 
 #include <locale.h>
 
@@ -17,9 +18,10 @@ class Client{
 private:
 private:
     int clientSocket;
-    bool socketCreated;
+    bool socketCreated = false;
     string serverAddress;
     int port;
+    bool hasReceived;
     sockaddr_in serverAddressStruct;
 
     static Client* instance;
@@ -38,6 +40,13 @@ public:
     void closeConnection();
 
     bool getScoketCreated() {return socketCreated;}
+    void setHasReceived(bool hasReceived) {this->hasReceived = hasReceived;}
+    bool getHasReceived() {return hasReceived;}
+
+    void setNonBlocking(bool nonBlocking);
+    bool checkConnectionStatus();
+
+    int getClientSocket() {return clientSocket;}
 
     // void str_to_bin(char* str, int str_len, char* bin, int* bin_len);
     // void bin_to_c2b1q(char* bin, int bin_len, char* cod, int* cod_len);

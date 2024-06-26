@@ -4,7 +4,6 @@ ServerSection::ServerSection(){
 }
 
 ServerSection::~ServerSection(){
-
 }
 
 void ServerSection::init(){
@@ -31,14 +30,18 @@ void ServerSection::onButtonClick(){
     //BOTAO CONECTAR
     //ENVIAR CONNDATA
 
-    if(conn != ""){
-        server = Server::getInstance();
-        if(!server->getScoketCreated())
-            server->createSocket(stoi(conn));
-            
-        server->start();
-    }
-}
+    Server * server = Server::getInstance();
+     if(conn != ""){
+         if(!server->getScoketCreated())
+             server->createSocket(stoi(conn));
+
+         server->start();
+         clientSocket = server->getClientSocket();
+     } else {
+         server->closeConnection();
+     }
+ }
+
 
 void ServerSection::update(){
     DrawText(title.c_str(), posX + INNER_PADDING, posY+INNER_PADDING, 30 ,GRAY);
@@ -58,6 +61,8 @@ void ServerSection::update(){
         }
     }
 }
+
+
 
 string ServerSection::getConnData(){
     return conn;

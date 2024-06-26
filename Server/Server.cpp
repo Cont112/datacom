@@ -18,13 +18,13 @@ void Server::deleteInstance(){
 }
 
 Server::Server(){
-
-
-
+    hasReceived = true;
 }
 
-Server::~Server(){
+Server::~Server() {
+    close(clientSocket);
     close(serverSocket);
+    deleteInstance();
 }
 
 void Server::createSocket(int port){
@@ -52,14 +52,17 @@ void Server::createSocket(int port){
 }
 
 
-void Server::start(){
+void Server::start() {
+    socketCreated = true;
     cout << "Server started" << endl;
     int clientSize = sizeof(clientAddressStruct);
     clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddressStruct, (socklen_t*)&clientSize);
-    if(clientSocket < 0){
+    if (clientSocket < 0) {
         perror("Error accepting connection");
         exit(1);
     }
+
+    fcntl(clientSocket, F_SETFL, O_NONBLOCK); // Tornar o socket do cliente não bloqueante
     cout << "Client connected" << endl;
 }
 
@@ -67,12 +70,24 @@ void Server::sendMessage(string message){
     send(clientSocket, message.c_str(), message.size(), 0);
 }
 
-string Server::receiveMessage(){
+
+string Server::receiveMessage() {
     char buffer[1024] = {0};
-    recv(clientSocket, buffer, 1024, 0);
-    return string(buffer);
+    int bytesReceived = recv(clientSocket, buffer, 1024, 0);
+
+    if (bytesReceived > 0) {
+        return string(buffer, bytesReceived);
+    } else if (bytesReceived == 0) {
+        return ""; // Conexão encerrada
+    } else if (errno == EAGAIN || errno == EWOULDBLOCK) {
+        return ""; // Não há dados disponíveis
+    } else {
+        perror("Error receiving message");
+        return "";
+    }
 }
 
-void Server::closeConnection(){
+void Server::closeConnection() {
     close(clientSocket);
+    clientSocket = -1; // Indicar que não há cliente conectado
 }

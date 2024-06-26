@@ -4,7 +4,6 @@ ClientSection::ClientSection(){
 }
 
 ClientSection::~ClientSection(){
-
 }
 
 void ClientSection::init(){
@@ -33,9 +32,14 @@ void ClientSection::init(){
 void ClientSection::onButtonClick(){
     if(conn.first != "" && conn.second != ""){
         client = Client::getInstance();
-        if(client->getScoketCreated())
+        if(!client->getScoketCreated())
             client->createSocket(conn.first, stoi(conn.second));
         client->connectToServer();
+        while(!client->checkConnectionStatus());
+        if (client->checkConnectionStatus()) {
+         clientSocket = client->getClientSocket(); // Obter o socket do cliente
+         cout << "Conectado ao servidor" << endl;
+    }
     } 
 }
 
@@ -59,6 +63,8 @@ void ClientSection::update(){
             conn.second = (tb->getText());
         }
     }
+    
+
 }
 
 pair<string,string> ClientSection::getConnData(){

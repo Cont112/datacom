@@ -8,9 +8,7 @@ using namespace std;
 class ServerSection : public Section {
 private:
     string conn;
-    bool isClient;
-    Server* server = nullptr;
-
+    int clientSocket = -1;
 
 public:
     ServerSection();
@@ -24,5 +22,6 @@ public:
 
     string getConnData();
     void update();
+    void updateServer();
 
 };

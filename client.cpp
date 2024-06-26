@@ -13,8 +13,8 @@ void getAllComponents();
 
 ClientSection client;
 
-MsgSection msg;
 PlotSection plot;
+MsgSection msg;
 map<int, Component*> allComponents;
 
 InputManager* pInput = InputManager::getInstance();
@@ -31,8 +31,9 @@ int main(void)
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "DataCom");
     
     client.init();
-    msg.init();
     plot.init();
+    msg.init(&plot);
+    msg.setIsClient(true);
 
     SetTargetFPS(60);
 

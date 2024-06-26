@@ -77,7 +77,7 @@ int main(){
   }
 
   char rsa_header[2];
-  //ssize_t bytes_rec = recv(server_sock, rsa_header, sizeof(rsa_header), 0);
+  ssize_t bytes_rec = recv(server_sock, rsa_header, sizeof(rsa_header), 0);
   int n = rsa_header[0] & 0xFF;
   int e = rsa_header[1] & 0xFF;
   printf("Public key(e, n): (%d, %d)\n", e, n);

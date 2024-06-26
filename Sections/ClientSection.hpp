@@ -8,8 +8,8 @@ using namespace std;
 class ClientSection : public Section {
 private:
     pair<string, string> conn;
-    bool isClient;
     Client* client = nullptr;
+    int clientSocket = -1;
 
 public:
     ClientSection();
