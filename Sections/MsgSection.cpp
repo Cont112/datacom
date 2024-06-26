@@ -52,7 +52,7 @@ void MsgSection::onButtonClick(){
     //encrypt(message.data(),message.length(),p,m);
     if(isClient){
         Client* c = Client::getInstance();
-        encoded = encrypt(message.data(), message.length(),c->getPublicKey().first, c->getPublicKey().second);
+        encoded = encrypt(message,c->getPublicKey().first, c->getPublicKey().second);
     }else{
         encoded  = encryptTemp(message,24);
     }
@@ -169,9 +169,8 @@ void MsgSection::convertResponse(){
     string msg(str);
     if(!isClient){
         Server* s = Server::getInstance();
-        string result;
-        result = decrypt(str, str_len,s->getPrivateKey(), N);
-        tb2->setText(result.c_str());
+        msg = decrypt(msg,s->getPrivateKey(), N);
+        tb2->setText(msg.c_str());
 
     }else{
         msg = decryptTemp(msg, 24);
