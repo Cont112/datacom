@@ -42,13 +42,17 @@ void MsgSection::init(PlotSection* p){
 void MsgSection::onButtonClick(){
     cout << "message Button Clicked" << endl;
 
-    char bin[256];
+
+    char bin[512];
     int bin_len;
 
     char cod[256];
     int cod_len;
 
-    str_to_bin(message.c_str(),message.length(), bin, &bin_len);
+    //encrypt(message.data(),message.length(),p,m);
+    string encoded  = encryptTemp(message,24);
+
+    str_to_bin(encoded.data(), encoded.length(), bin, &bin_len);
 
     bin_to_c2b1q(bin,bin_len,cod,&cod_len);
 
@@ -130,13 +134,13 @@ void MsgSection::convertResponse(){
         }
     }
     plot->setData(d);
-    
+
     Textbox* tb4 = (Textbox*)components[3]; //binary
     Textbox* tb3 = (Textbox*)components[2]; // Obter a caixa de texto "Encrypted"
     Textbox* tb2 = (Textbox*)components[1]; // Obter a caixa de texto "Response"
 
     //decrypt()
-    char bin[256];
+    char bin[512];//32CARACTERES
     int bin_len;
 
     char str[256];
@@ -150,6 +154,11 @@ void MsgSection::convertResponse(){
 
     bin_to_str(bin,bin_len,str,&str_len);
     tb3->setText(str);
+
+    string msg(str);
+    msg = decryptTemp(msg, 24);
+    tb2->setText(msg.c_str());
+
 
     //decrypt();
 }

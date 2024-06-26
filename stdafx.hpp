@@ -24,6 +24,8 @@ void c2b1q_to_bin(char* cod, int cod_len, char* bin, int* bin_len);
 int extendedEuclides(int e, int totiente);
 void GetPrivateKey(int *privateKey);
 void decrypt(char* msg, int msg_len, int privateKey, int modulus);
+string encryptTemp(string& str, int key);
+string decryptTemp(string& str, int key);
 
 #define P 11
 #define Q 23

@@ -156,3 +156,23 @@ void encrypt(char* msg, int msg_len, int publicKey, int modulus){
     msg[i] = PotModN(msg[i], publicKey, modulus);
   }
 }
+
+string encryptTemp(string& str, int key){
+    string result = str;
+    const int t = 256;
+
+    for(int i = 0; i < result.length(); i++){
+      result[i] = (result[i] + key) % t;
+    }
+    return result;
+}
+
+string decryptTemp(string& str, int key){
+    string result = str;
+    const int t = 256;
+
+    for(int i = 0; i < result.length(); i++){
+      result[i] = (result[i] - key + t) % t;
+    }
+    return result;
+}
