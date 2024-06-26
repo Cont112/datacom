@@ -12,6 +12,7 @@ Client* Client::getInstance(){
 }
 
 void Client::deleteInstance(){
+    close(clientSocket);
     if(instance){
         delete instance;
         instance = NULL;
@@ -24,7 +25,6 @@ Client::Client(){
 }
 
 Client::~Client(){
-    close(clientSocket);
     deleteInstance();
 }
 

@@ -6,6 +6,7 @@
 #include "Sections/PlotSection.hpp"
 #include "Sections/ServerSection.cpp"
 #include "Manager/InputManager.hpp"
+#include "Server/Server.hpp"
 
 
 void getAllComponents();
@@ -55,7 +56,6 @@ int main(void)
     }
 
     CloseWindow();
-
     return 0;
 }
 

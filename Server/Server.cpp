@@ -11,6 +11,8 @@ Server* Server::getInstance(){
 }
 
 void Server::deleteInstance(){
+    close(clientSocket);
+    close(serverSocket);
     if(instance){
         delete instance;
         instance = NULL;
@@ -22,8 +24,6 @@ Server::Server(){
 }
 
 Server::~Server() {
-    close(clientSocket);
-    close(serverSocket);
     deleteInstance();
 }
 

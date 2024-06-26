@@ -5,6 +5,7 @@
 #include "Sections/ClientSection.hpp"
 #include "Sections/MsgSection.hpp"
 #include "Sections/PlotSection.hpp"
+#include "Client/Client.hpp"
 #include "Manager/InputManager.hpp"
 
 
@@ -55,7 +56,6 @@ int main(void)
     }
 
     CloseWindow();
-
     return 0;
 }
 
