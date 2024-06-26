@@ -176,3 +176,23 @@ string decryptTemp(string& str, int key){
     }
     return result;
 }
+
+void convertToVector(vector<int>& d, string receivedMessage){
+    for(int i = 0; i < receivedMessage.length(); i++){
+        switch (receivedMessage[i]){
+            case 'a':
+                d.push_back(-3);
+                break;
+            case 'b':
+                d.push_back(-1);
+                break;
+            case 'c':
+                d.push_back(1);
+                break;
+            case 'd':
+                d.push_back(3);
+                break;
+                
+        }
+    }
+}

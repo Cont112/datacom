@@ -26,6 +26,7 @@ void GetPrivateKey(int *privateKey);
 void decrypt(char* msg, int msg_len, int privateKey, int modulus);
 string encryptTemp(string& str, int key);
 string decryptTemp(string& str, int key);
+void convertToVector(vector<int>& d, string receivedMessage);
 
 #define P 11
 #define Q 23

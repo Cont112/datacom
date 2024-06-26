@@ -65,6 +65,11 @@ void MsgSection::onButtonClick(){
         s->sendMessage(cod);
     }
 
+    vector<int> data;
+    convertToVector(data,cod);
+    plot->setData(data);
+
+
 }
 
 void MsgSection::update() {
