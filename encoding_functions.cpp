@@ -102,10 +102,12 @@ void GetPrivateKey(unsigned char *privateKey){
   (*privateKey) = extendedEuclides(E, totiente);
 }
 
-void decrypt(char* msg, int msg_len, int privateKey, int modulus){
-  for(int i = 0; i < msg_len; i++){
-    msg[i] = PotModN(msg[i], privateKey, modulus);
+string decrypt(char* msg, int msg_len, int privateKey, int modulus){
+  string result = msg;
+  for(int i = 0; i < result.length(); i++){
+    result[i] = PotModN(msg[i], privateKey, modulus);
   }
+  return result;
 }
 
 void str_to_bin(const char* str, int str_len, char* bin, int* bin_len){

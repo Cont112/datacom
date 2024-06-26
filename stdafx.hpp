@@ -33,7 +33,7 @@ void bin_to_str(char* bin, int bin_len, char* str, int* str_len);
 void c2b1q_to_bin(char* cod, int cod_len, char* bin, int* bin_len);
 int extendedEuclides(int e, int totiente);
 void GetPrivateKey(unsigned char *privateKey);
-void decrypt(char* msg, int msg_len, int privateKey, int modulus);
+string decrypt(char* msg, int msg_len, int privateKey, int modulus);
 string encryptTemp(string& str, int key);
 string decryptTemp(string& str, int key);
 void convertToVector(vector<int>& d, string receivedMessage);

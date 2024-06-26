@@ -4,9 +4,7 @@ ServerSection::ServerSection(){
 }
 
 ServerSection::~ServerSection(){
-    Server* server = Server::getInstance();
 
-    server->deleteInstance();
 }
 
 void ServerSection::init(){

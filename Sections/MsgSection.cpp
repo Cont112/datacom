@@ -169,8 +169,9 @@ void MsgSection::convertResponse(){
     string msg(str);
     if(!isClient){
         Server* s = Server::getInstance();
-        decrypt(str, str_len,s->getPrivateKey(), N);
-        tb2->setText(str);
+        string result;
+        result = decrypt(str, str_len,s->getPrivateKey(), N);
+        tb2->setText(result.c_str());
 
     }else{
         msg = decryptTemp(msg, 24);
