@@ -11,8 +11,6 @@ No cliente, o usuário informa o endereço de IP do servidor (se for localhost, 
 
 Para verificar o funcionamento do algoritmo utilizado para a codificaçao de linha 2B1Q, o usuário pode clicar no botão da seção inferior "Prova Real", que sobrescreve as etapas de criptografia e conversão para binário, plotando, efetivamente, apenas os sinais gerados pela sequência de bits "0011011001" após a conversão para 2B1Q.
 
-![Imagem](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.rfwireless-world.com%2FTerminology%2FAdvantages-and-Disadvantages-of-2B1Q.html&psig=AOvVaw13OQJGervmJNdz0001Wdzy&ust=1719510754821000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOing_Lq-YYDFQAAAAAdAAAAABAE)
-
 ### Codificação ###
 Para codificar as mensagens enviadas, foi utilizado o algoritmo de codificação de linha 2B1Q. Além disso, para encriptografar os textos enviados, foi utilizado o algoritmo de criptografia RCA com números primos baixos. 
 
