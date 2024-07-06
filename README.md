@@ -1,4 +1,5 @@
 # Projeto Sockets #
+Interface gráfica de comunicação entre dois computadores em C++ com visualização de dados brutos, criptografia e plotagem de sinais codificados em 2B1Q.
 ### Instalação ###
 Para compilar o código execute o seguinte código:
 ``` make all```
